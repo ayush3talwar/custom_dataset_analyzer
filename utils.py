@@ -1,7 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+import os
 # Load CSV data into a Pandas DataFrame
 def load_data(file_path):
     try:
@@ -27,14 +27,24 @@ def analyze_data(df):
     print("\nCorrelation between numeric columns:")
     print(df[numeric_cols].corr())
 
-# Generate histogram for a specific column
+
 def plot_histogram(df, column):
+    # Sanitize the column name to make it a valid file name
+    sanitized_column = column.replace("/", "_").replace(" ", "_").replace(":", "_")
+    
+    # Ensure the output directory exists
+    if not os.path.exists('output'):
+        os.makedirs('output')
+
+    # Plotting the histogram
     plt.figure(figsize=(8, 6))
     sns.histplot(df[column], kde=True)
     plt.title(f"Histogram for {column}")
     plt.xlabel(column)
     plt.ylabel("Frequency")
-    plt.savefig(f"output/{column}_histogram.png")
+    
+    # Save the plot with the sanitized column name
+    plt.savefig(f"output/{sanitized_column}_histogram.png")
     plt.show()
 
 # Generate scatter plot between two columns
@@ -47,13 +57,22 @@ def plot_scatter(df, column_x, column_y):
     plt.savefig(f"output/{column_x}_{column_y}_scatter.png")
     plt.show()
 
-# Generate box plot for a specific column
 def plot_boxplot(df, column):
+    # Sanitize the column name to make it a valid file name
+    sanitized_column = column.replace("/", "_").replace(" ", "_").replace(":", "_")
+    
+    # Ensure the output directory exists
+    if not os.path.exists('output'):
+        os.makedirs('output')
+
+    # Plotting the box plot
     plt.figure(figsize=(8, 6))
     sns.boxplot(x=df[column])
-    plt.title(f"Box Plot for {column}")
+    plt.title(f"Boxplot for {column}")
     plt.xlabel(column)
-    plt.savefig(f"output/{column}_boxplot.png")
+    
+    # Save the plot with the sanitized column name
+    plt.savefig(f"output/{sanitized_column}_boxplot.png")
     plt.show()
 
 # Generate heatmap for correlation matrix
